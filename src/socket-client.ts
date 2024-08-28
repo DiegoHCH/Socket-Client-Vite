@@ -1,5 +1,7 @@
 import { Manager, Socket } from "socket.io-client";
 
+let socket: Socket;
+
 export const connectToServer = ( token : string) => {
 
   const manager = new Manager('wss://api-heylinx-develop.mdcloudps.com', {
@@ -8,7 +10,8 @@ export const connectToServer = ( token : string) => {
     }
   });
 
-  const socket = manager.socket('/');
+  socket?.removeAllListeners();
+  socket = manager.socket('/');
 
   addListeners( socket );
 
