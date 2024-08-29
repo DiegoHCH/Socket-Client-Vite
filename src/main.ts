@@ -1,6 +1,7 @@
 import { Socket } from 'socket.io-client';
 import { connectToServer, } from './socket-client';
 import './style.css'
+import { authenticate } from './auth';
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div class="chat_wrapper">
@@ -15,7 +16,6 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
             <input id="email-input" placeholder="Email"/>
             <button id="btn-authenticate">Authenticate</button>
           </fieldset>
-          <span id="token-response"></span>
           <fieldset>
             <input id="token-input" placeholder="Json Web Token"/>
             <button id="btn-connect">Connect</button>
@@ -63,8 +63,19 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
 const inputToken = document.querySelector<HTMLInputElement>('#token-input')!;
 const btnConnect = document.querySelector<HTMLButtonElement>('#btn-connect')!;
+const inputEmail = document.querySelector<HTMLInputElement>('#email-input')!;
+const btnAuthenticate = document.querySelector<HTMLButtonElement>('#btn-authenticate')!;
 var socket : Socket;
 
+
+btnAuthenticate.addEventListener('click', async () => {
+  try {
+    const token = await authenticate(inputEmail.value.trim());
+    inputToken.value = token;
+  } catch (error) {
+    alert('Authentication failed: ' + error);
+  }
+});
 
 btnConnect.addEventListener('click', () => {
 

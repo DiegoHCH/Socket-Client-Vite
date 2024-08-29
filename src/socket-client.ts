@@ -22,7 +22,6 @@ export const connectToServer = ( token : string) => {
 const addListeners = ( ) => {
 
   const serverStatusLabel = document.querySelector<HTMLSpanElement>('#server-status')!;
-  const clientsUL = document.querySelector<HTMLUListElement>('#clients-ul')!;
   const messageForm = document.querySelector<HTMLFormElement>('#message-form')!;
   const messageInput = document.querySelector<HTMLInputElement>('#message-input')!;
   const messagesUl = document.querySelector<HTMLUListElement>('#messages-ul')!;
@@ -35,18 +34,6 @@ const addListeners = ( ) => {
    
   socket.on('disconnect', () => {
     serverStatusLabel.innerHTML = 'disconnected';
-  });
-
-  socket.on('on-connected', ( clients : string[] ) => {
-    console.log(clients)
-    let clientsHTML = '';
-    clients.forEach( clientId => {
-      clientsHTML += `
-        <li>${ clientId }</>
-      `
-    });
-
-    clientsUL.innerHTML = clientsHTML;
   });
 
   messageForm.addEventListener( 'submit', ( event ) => {
