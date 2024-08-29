@@ -103,6 +103,9 @@ input {
 }
 
 
+// Personalizada
+
+
 div.chat_wrapper {
   height: 100%;
   flex: 1;
@@ -222,4 +225,30 @@ button#btn-connect {
 button#btn-connect:hover {
   border-color: #000876;
   background-color: #353b98;
+}
+
+button#btn-authenticate {
+  background-color: #000876;
+}
+
+button#btn-authenticate:hover {
+  border-color: #000876;
+  background-color: #353b98;
+}
+
+.rooms {
+  padding: 40px 0px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  column-gap: 20px;
+  height: 100%;
+  width: 100%
+}
+
+.rooms ul{
+  border: 1px solid white;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
 }

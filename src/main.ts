@@ -12,8 +12,8 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
         <h3>Authentication</h3>
         <section>
           <fieldset>
-            <input id="token-input" placeholder="Email"/>
-            <button id="btn-connect">Authenticate</button>
+            <input id="email-input" placeholder="Email"/>
+            <button id="btn-authenticate">Authenticate</button>
           </fieldset>
           <span id="token-response"></span>
           <fieldset>
@@ -24,10 +24,20 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
         <span id="server-status">Offline</span>
         </section>
 
-        <h3>Connected</h3>
-        <section>
-          <ul id="clients-ul"></ul>
-        </section>
+        <div class="rooms">
+          <section>
+            <h3>Private</h3>
+            <ul id="private-ul"></ul>
+          </section>
+          <section>
+            <h3>Groups</h3>
+            <ul id="group-ul"></ul>
+          </section>
+          <section>
+            <h3>Broadcast</h3>
+            <ul id="broadcast-ul"></ul>
+          </section>
+        </div>
 
       </div>
 
