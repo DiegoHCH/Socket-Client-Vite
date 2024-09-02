@@ -1,6 +1,6 @@
 
 
-export async function authenticate(email: string): Promise<string> {
+export async function authenticate(email: string): Promise<any> {
   const response = await fetch('https://api-heylinx-develop.mdcloudps.com/api/heylinx/auth/connect-heylinx', {
     method: 'POST',
     headers: {
@@ -15,5 +15,5 @@ export async function authenticate(email: string): Promise<string> {
   }
 
   const data = await response.json();
-  return data.data.token; 
+  return data; 
 }

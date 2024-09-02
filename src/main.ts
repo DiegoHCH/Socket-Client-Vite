@@ -2,6 +2,7 @@ import { Socket } from 'socket.io-client';
 import { connectToServer, } from './socket-client';
 import './style.css'
 import { authenticate } from './auth';
+import { listChats } from './endpoints';
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div class="chat_wrapper">
@@ -65,21 +66,55 @@ const inputToken = document.querySelector<HTMLInputElement>('#token-input')!;
 const btnConnect = document.querySelector<HTMLButtonElement>('#btn-connect')!;
 const inputEmail = document.querySelector<HTMLInputElement>('#email-input')!;
 const btnAuthenticate = document.querySelector<HTMLButtonElement>('#btn-authenticate')!;
+
+const privateUl = document.querySelector<HTMLUListElement>('#private-ul')!;
+const groupUl = document.querySelector<HTMLUListElement>('#group-ul')!;
+const broadcastUl = document.querySelector<HTMLUListElement>('#broadcast-ul')!;
+
 var socket : Socket;
+var id_t4two: string;
+var email: string;
+
+function renderChats(organizedChats: { SINGLE: any[], GROUP: any[], BROADCAST: any[] }) {
+  privateUl.innerHTML = '';  // Limpiar las listas antes de añadir nuevos elementos
+  groupUl.innerHTML = '';
+  broadcastUl.innerHTML = '';
+
+  organizedChats.SINGLE.forEach(chat => {
+    const li = document.createElement('li');
+    li.textContent = chat.name || 'No name'; 
+    privateUl.appendChild(li);
+  });
+
+  organizedChats.GROUP.forEach(chat => {
+    const li = document.createElement('li');
+    li.textContent = chat.name || 'No name';
+    groupUl.appendChild(li);
+  });
+
+  organizedChats.BROADCAST.forEach(chat => {
+    const li = document.createElement('li');
+    li.textContent = chat.name || 'No name';
+    broadcastUl.appendChild(li);
+  });
+}
 
 
 btnAuthenticate.addEventListener('click', async () => {
   try {
-    const token = await authenticate(inputEmail.value.trim());
-    inputToken.value = token;
+    email = inputEmail.value.trim()
+    const data = await authenticate(email);
+    inputToken.value = data.data.token;
+    id_t4two = data.data.id_user_t4two;
   } catch (error) {
     alert('Authentication failed: ' + error);
   }
 });
 
-btnConnect.addEventListener('click', () => {
+btnConnect.addEventListener('click', async () => {
 
   if( inputToken.value.trim().length <= 0 ) return alert('Enter a valid Token');
-
+  const chats = await listChats({ id: id_t4two,  email: email})
+  renderChats(chats); 
   socket = connectToServer(inputToken.value.trim());
 })
