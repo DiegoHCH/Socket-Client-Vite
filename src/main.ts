@@ -80,23 +80,23 @@ function renderChats(organizedChats: { SINGLE: any[], GROUP: any[], BROADCAST: a
   groupUl.innerHTML = '';
   broadcastUl.innerHTML = '';
 
-  organizedChats.SINGLE.forEach(chat => {
-    const li = document.createElement('li');
-    li.textContent = chat.name || 'No name'; 
-    privateUl.appendChild(li);
-  });
-
-  organizedChats.GROUP.forEach(chat => {
+  const createChatItem = (chat: any, ulElement: HTMLUListElement) => {
     const li = document.createElement('li');
     li.textContent = chat.name || 'No name';
-    groupUl.appendChild(li);
-  });
+    li.setAttribute('data-id', chat.id); // Agregar el id de la sala como un atributo data-id
 
-  organizedChats.BROADCAST.forEach(chat => {
-    const li = document.createElement('li');
-    li.textContent = chat.name || 'No name';
-    broadcastUl.appendChild(li);
-  });
+    li.addEventListener('click', () => {
+      const roomId = li.getAttribute('data-id');
+      console.log(`Clicked room ID: ${roomId}`);
+      // Aquí puedes realizar alguna acción con el roomId, como unirte a la sala o mostrar mensajes
+    });
+
+    ulElement.appendChild(li);
+  };
+
+  organizedChats.SINGLE.forEach(chat => createChatItem(chat, privateUl));
+  organizedChats.GROUP.forEach(chat => createChatItem(chat, groupUl));
+  organizedChats.BROADCAST.forEach(chat => createChatItem(chat, broadcastUl));
 }
 
 

@@ -246,9 +246,15 @@ button#btn-authenticate:hover {
 }
 
 .rooms ul{
-  border: 1px solid white;
   display: flex;
   flex-direction: column;
   margin: 0;
   padding: 0;
+}
+
+.rooms ul li{
+  border: 1px solid white;
+  cursor: pointer;
+  padding: 8px;
+  transition: background-color 0.3s ease;
 }
