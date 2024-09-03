@@ -194,17 +194,17 @@ div.chat_wrapper div.chat form {
   border-radius: 10px;
   max-width: 60%;
   word-wrap: break-word;
-  font-weight: bold;
+  color: #000000;
 }
 
 #messages-ul li.sent {
-  background-color: #023b00; 
+  background-color: #89c5e6; 
   align-self: flex-end; 
   text-align: right;
 }
 
 #messages-ul li.received {
-  background-color: #0d006d; 
+  background-color: #ffffff; 
   align-self: flex-start; 
   text-align: left; 
 }
@@ -257,4 +257,5 @@ button#btn-authenticate:hover {
   cursor: pointer;
   padding: 8px;
   transition: background-color 0.3s ease;
+  margin: 2px 0px
 }

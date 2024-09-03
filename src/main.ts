@@ -2,7 +2,7 @@ import { Socket } from 'socket.io-client';
 import { connectToServer, } from './socket-client';
 import './style.css'
 import { authenticate } from './auth';
-import { listChats } from './endpoints';
+import { listChats, listMessages } from './endpoints';
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div class="chat_wrapper">
@@ -85,9 +85,16 @@ function renderChats(organizedChats: { SINGLE: any[], GROUP: any[], BROADCAST: a
     li.textContent = chat.name || 'No name';
     li.setAttribute('data-id', chat.id); // Agregar el id de la sala como un atributo data-id
 
-    li.addEventListener('click', () => {
+    li.addEventListener('click', async () => {
       const roomId = li.getAttribute('data-id');
       console.log(`Clicked room ID: ${roomId}`);
+
+      try {
+        const messages = await listMessages({ id: roomId });
+        renderMessages(messages);
+      } catch (error) {
+        console.error('Failed to load messages:', error);
+      }
       // Aquí puedes realizar alguna acción con el roomId, como unirte a la sala o mostrar mensajes
     });
 
@@ -97,6 +104,18 @@ function renderChats(organizedChats: { SINGLE: any[], GROUP: any[], BROADCAST: a
   organizedChats.SINGLE.forEach(chat => createChatItem(chat, privateUl));
   organizedChats.GROUP.forEach(chat => createChatItem(chat, groupUl));
   organizedChats.BROADCAST.forEach(chat => createChatItem(chat, broadcastUl));
+}
+
+function renderMessages(messages: any[]) {
+  const messagesUl = document.querySelector<HTMLUListElement>('#messages-ul')!;
+  messagesUl.innerHTML = ''; // Limpiar los mensajes existentes antes de añadir nuevos
+
+  messages.forEach(message => {
+    const li = document.createElement('li');
+    li.textContent = message.message || 'Empty message'; // Asumiendo que el mensaje tiene un campo 'content'
+    li.className = message.id_sender === id_t4two ? 'message sent' : 'message received';
+    messagesUl.appendChild(li);
+  });
 }
 
 
@@ -117,4 +136,5 @@ btnConnect.addEventListener('click', async () => {
   const chats = await listChats({ id: id_t4two,  email: email})
   renderChats(chats); 
   socket = connectToServer(inputToken.value.trim());
+  inputToken.value = '';
 })

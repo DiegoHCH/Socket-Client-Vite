@@ -11,8 +11,6 @@ export async function listChats( payload: any ): Promise<any> {
     body: JSON.stringify({ id : payload.id, email: payload.email })
   });
 
-  console.log(response);
-
   if (!response.ok) {
     throw new Error('Failed to listChats');
   }
@@ -33,5 +31,26 @@ export async function listChats( payload: any ): Promise<any> {
   });
 
   return chats;
+}
+
+export async function listMessages( payload: any ): Promise<any> {
+  console.log(JSON.stringify(payload));
+  const response = await fetch('https://api-t4two-develop.wiedii.co/conversations/api/v1/get_conversations', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ id_chat : payload.id })
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to list Messages');
+  }
+
+  const data = await response.json();
+  const messages = data.data;
+
+  return messages;
 }
 
