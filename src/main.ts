@@ -1,5 +1,5 @@
 import { Socket } from 'socket.io-client';
-import { connectToServer, } from './socket-client';
+import { changeRoom, connectToServer, userConnect, } from './socket-client';
 import './style.css'
 import { authenticate } from './auth';
 import { listChats, listMessages } from './endpoints';
@@ -88,6 +88,7 @@ function renderChats(organizedChats: { SINGLE: any[], GROUP: any[], BROADCAST: a
     li.addEventListener('click', async () => {
       const roomId = li.getAttribute('data-id');
       console.log(`Clicked room ID: ${roomId}`);
+      changeRoom(roomId!);
 
       try {
         const messages = await listMessages({ id: roomId });
@@ -108,11 +109,11 @@ function renderChats(organizedChats: { SINGLE: any[], GROUP: any[], BROADCAST: a
 
 function renderMessages(messages: any[]) {
   const messagesUl = document.querySelector<HTMLUListElement>('#messages-ul')!;
-  messagesUl.innerHTML = ''; // Limpiar los mensajes existentes antes de añadir nuevos
+  messagesUl.innerHTML = '';
 
   messages.forEach(message => {
     const li = document.createElement('li');
-    li.textContent = message.message || 'Empty message'; // Asumiendo que el mensaje tiene un campo 'content'
+    li.textContent = message.message || 'Empty message'; 
     li.className = message.id_sender === id_t4two ? 'message sent' : 'message received';
     messagesUl.appendChild(li);
   });
@@ -136,5 +137,6 @@ btnConnect.addEventListener('click', async () => {
   const chats = await listChats({ id: id_t4two,  email: email})
   renderChats(chats); 
   socket = connectToServer(inputToken.value.trim());
+  userConnect(id_t4two);
   inputToken.value = '';
 })
