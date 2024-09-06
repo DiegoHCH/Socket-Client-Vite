@@ -83,12 +83,14 @@ function renderChats(organizedChats: { SINGLE: any[], GROUP: any[], BROADCAST: a
   const createChatItem = (chat: any, ulElement: HTMLUListElement) => {
     const li = document.createElement('li');
     li.textContent = chat.name || 'No name';
-    li.setAttribute('data-id', chat.id); // Agregar el id de la sala como un atributo data-id
+    li.setAttribute('data-id', chat.id);
+    li.setAttribute('data-type', chat.type);
 
     li.addEventListener('click', async () => {
       const roomId = li.getAttribute('data-id');
+      const roomType = li.getAttribute('data-type');
       console.log(`Clicked room ID: ${roomId}`);
-      changeRoom(roomId!);
+      changeRoom(roomId!, roomType!);
 
       try {
         const messages = await listMessages({ id: roomId });

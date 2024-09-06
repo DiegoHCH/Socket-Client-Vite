@@ -1,7 +1,10 @@
 import { Manager, Socket } from "socket.io-client";
+import { createMessageObject } from './message-model';
+import { IMessage } from './interfaces';
 
 let socket: Socket;
 let currentRoomId: string | null = null;
+let currentRoomType: string | null = null;
 let id_user: string | null = null;
 
 export const connectToServer = ( token : string) => {
@@ -41,20 +44,14 @@ const addListeners = ( ) => {
     event.preventDefault();
     if( messageInput.value.trim().length <= 0 ) return;
 
-    console.log('Current Room ID:', currentRoomId);
-    console.log('User ID:', id_user);
-    console.log('Message:', messageInput.value);
+    const payload = createMessageObject( currentRoomId!, messageInput.value, '100', id_user!, currentRoomType!);
 
-    socket.emit('sendMessage', {
-      roomID: currentRoomId,
-      id_sender: id_user,
-      message: messageInput.value
-     });
+    socket.emit('sendMessage',  payload );
 
      messageInput.value = ''
   });
 
-  socket.on('receiveMessage', ( payload : {  message : string, id_sender : string } ) => {
+  socket.on('receiveMessage', ( payload : { id_sender: string, message: string, id_chat: string } ) => {
     console.log('Message received:', payload.message);
     console.log('Sender ID:', payload.id_sender);
     appendMessage(payload);  })
@@ -65,8 +62,9 @@ export const disconnectSocket = ( socket : Socket ) => {
   socket.disconnect()
 }
 
-export const changeRoom = (roomId: string) => {
+export const changeRoom = (roomId: string, roomType: string) => {
   currentRoomId = roomId;
+  currentRoomType = roomType;
 }
 
 export const userConnect = (id: string) => {
